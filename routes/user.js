@@ -11,10 +11,10 @@ router.get("/signup",(req,res)=>{
     return res.render("signup");
 });
 
-router.post("/signin",(req,res)=>{
+router.post("/signin",async(req,res)=>{
     const {email,password}=req.body;
     try{
-        const token=User.matchPasswordAndGenerateToken(email,password);
+        const token=await User.matchPasswordAndGenerateToken(email,password);
         // console.log("Token ",token);
         return res.cookie("Token",token).redirect("/");
     }catch(error){
@@ -22,6 +22,10 @@ router.post("/signin",(req,res)=>{
             error:"Incorrect Email or Password",
         });
     } 
+});
+
+router.get("/logout",(req,res)=>{
+    res.clearCookie("Token").redirect("/");
 });
 
 router.post("/signup",async(req,res)=>{
